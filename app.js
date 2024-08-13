@@ -64,6 +64,7 @@ app.put('/tasklists/:tasklistid',(req,res)=>{
         res.status(500);
     })
 });
+
 //to update element by id
 app.patch('/tasklists/:tasklistid',(req,res)=>{
 
@@ -82,7 +83,80 @@ app.delete('/tasklists/:tasklistid',(req,res)=>{
 
     TaskList.findByIdAndDelete(req.params.tasklistid)
     .then((lists) => {
+        res.status(200).send(lists);
+    })
+    .catch((err)=>{console.log(err);
+        res.status(500);
+    })
+});
+
+
+/*Task Operations getting list tasks*/
+app.get('/tasklists/:tasklistid/tasks',(req,res)=>{
+    Task.find({_taskListId:req.params.tasklistid})
+    .then((lists) => {
+        res.status(200).send(lists);
+    })
+    .catch((err)=>{console.log(err);
+        res.status(500);
+    })
+});
+/*Task Operations getting list task by id*/
+app.get('/tasklists/:tasklistid/tasks/:taskid',(req,res)=>{
+    Task.findOne({_taskListId:req.params.tasklistid,_id:req.params.taskid})
+    .then((lists) => {
+        res.status(200).send(lists);
+    })
+    .catch((err)=>{console.log(err);
+        res.status(500);
+    })
+});
+
+/*Task Operations list insertion*/
+app.post('/tasklists/:tasklistid/tasks',(req,res)=>{
+    let taskfields={'title':req.body.title,_taskListId:req.params.tasklistid};
+    Task(taskfields).save()
+    .then((lists)=>{
         res.status(201).send(lists);
+        
+    })
+    .catch((err)=>{console.log(err);
+        res.status(500);
+    })
+});
+
+/*Task Operation list delete list by ID*/
+//to delete element by id
+app.delete('/tasklists/:tasklistid/tasks/:taskid',(req,res)=>{
+
+    Task.findByIdAndDelete(req.params.taskid)
+    .then((lists) => {
+        res.status(200).send(lists);
+    })
+    .catch((err)=>{console.log(err);
+        res.status(500);
+    })
+});
+
+//to update more than one element component by id of task
+//to update element by id
+app.put('/tasklists/:tasklistid/tasks/:taskid',(req,res)=>{
+
+    Task.findOneAndUpdate({_taskListId:req.params.tasklistid,_id:req.params.taskid},{$set:req.body})
+    .then((lists) => {
+        res.status(200).send(lists);
+    })
+    .catch((err)=>{console.log(err);
+        res.status(500);
+    })
+});
+
+//to update single element component by id of task
+app.patch('/tasklists/:tasklistid/tasks/:taskid',(req,res)=>{
+
+    Task.findOneAndUpdate({_taskListId:req.params.tasklistid,_id:req.params.taskid},{$set:req.body})
+    .then((lists) => {
+        res.status(200).send(lists);
     })
     .catch((err)=>{console.log(err);
         res.status(500);
