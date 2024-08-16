@@ -81,13 +81,22 @@ app.patch('/tasklists/:tasklistid',(req,res)=>{
 //to delete element by id
 app.delete('/tasklists/:tasklistid',(req,res)=>{
 
-    TaskList.findByIdAndDelete(req.params.tasklistid)
+    const deleTaskelement=(taskList)=>{
+        Task.deleteMany({_taskListId:req.params.tasklistid})
+        .then(()=>{
+            return taskList;
+        })
+        .catch((err)=>{console.log(err);
+        })
+    };
+    const resp = TaskList.findByIdAndDelete(req.params.tasklistid)
     .then((lists) => {
-        res.status(200).send(lists);
+        deleTaskelement(lists);
     })
     .catch((err)=>{console.log(err);
         res.status(500);
     })
+    res.status(200).send(resp);
 });
 
 
